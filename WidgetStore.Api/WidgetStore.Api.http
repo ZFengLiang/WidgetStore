@@ -1,6 +1,7 @@
-@WidgetStore.Api_HostAddress = http://localhost:5087
+@baseUrl = http://localhost:5087
 
-GET {{WidgetStore.Api_HostAddress}}/weatherforecast/
-Accept: application/json
+### All products
+GET {{baseUrl}}/api/products
 
-###
+### Only widgets
+GET {{baseUrl}}/api/products?category=widgets

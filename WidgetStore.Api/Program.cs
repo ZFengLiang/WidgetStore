@@ -1,23 +1,26 @@
+using WidgetStore.Application.Products.Queries;
+using WidgetStore.Infrastructure;
+using WidgetStore.Infrastructure.Sql;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetProductsQuery).Assembly));
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// Create the database and seed products on startup (fine for a proof of concept)
+using (var scope = app.Services.CreateScope())
 {
-    app.MapOpenApi();
+    var db = scope.ServiceProvider.GetRequiredService<WidgetStoreDbContext>();
+    await db.Database.EnsureCreatedAsync();
 }
 
+if (app.Environment.IsDevelopment())
+    app.MapOpenApi();
+
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();
