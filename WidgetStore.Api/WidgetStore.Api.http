@@ -5,3 +5,24 @@ GET {{baseUrl}}/api/products
 
 ### Only widgets
 GET {{baseUrl}}/api/products?category=widgets
+
+### Place an order
+POST {{baseUrl}}/api/orders
+Content-Type: application/json
+
+{
+  "customerId": "cust-7",
+  "lines": [
+    { "productId": 2, "quantity": 2 },
+    { "productId": 4, "quantity": 1 }
+  ]
+}
+
+### Get the order (paste the orderId from the response above)
+GET {{baseUrl}}/api/customers/cust-7/orders/11f4610281e341d0820a757df82b9334
+
+### Broken rule: should give 400
+POST {{baseUrl}}/api/orders
+Content-Type: application/json
+
+{ "customerId": "cust-7", "lines": [] }

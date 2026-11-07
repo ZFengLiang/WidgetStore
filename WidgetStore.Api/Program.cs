@@ -4,7 +4,7 @@ using WidgetStore.Infrastructure.Sql;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(o => o.Filters.Add<WidgetStore.Api.Filters.DomainExceptionFilter>());
 builder.Services.AddOpenApi();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetProductsQuery).Assembly));
 builder.Services.AddInfrastructure(builder.Configuration);
