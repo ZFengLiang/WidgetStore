@@ -18,6 +18,7 @@ public static class DependencyInjection
         services.AddDbContext<WidgetStoreDbContext>(o =>
             o.UseSqlServer(config.GetConnectionString("Sql")));
         services.AddScoped<IProductRepository, SqlProductRepository>();
+        services.AddScoped<IStockService, SqlStockService>();
 
         // Azure Storage (Azurite locally): tables + queues
         var storage = config.GetConnectionString("Storage");

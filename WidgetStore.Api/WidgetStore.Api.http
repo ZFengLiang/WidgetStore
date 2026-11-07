@@ -26,3 +26,12 @@ POST {{baseUrl}}/api/orders
 Content-Type: application/json
 
 { "customerId": "cust-7", "lines": [] }
+
+### Not enough stock: should end up Rejected (Widget Mini has only 3)
+POST {{baseUrl}}/api/orders
+Content-Type: application/json
+
+{
+  "customerId": "cust-8",
+  "lines": [ { "productId": 3, "quantity": 5 } ]
+}
