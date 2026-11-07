@@ -1,8 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using WidgetStore.Application.Orders;
-using WidgetStore.Application.Orders.Commands;
-using WidgetStore.Application.Orders.Queries;
+using WidgetStore.Application.Commands;
+using WidgetStore.Application.DTO;
+using WidgetStore.Application.Queries;
+
 namespace WidgetStore.Api.Controllers;
 
 [ApiController]

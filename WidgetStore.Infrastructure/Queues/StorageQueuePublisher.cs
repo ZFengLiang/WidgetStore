@@ -1,7 +1,7 @@
 ﻿using System.Text.Json;
 using Azure.Storage.Queues;
 using WidgetStore.Application.Interfaces;
-using WidgetStore.Application.Orders;
+using WidgetStore.Application.Messages;
 namespace WidgetStore.Infrastructure.Queues;
 
 public class StorageQueuePublisher : IMessagePublisher

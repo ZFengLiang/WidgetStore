@@ -1,4 +1,4 @@
-using WidgetStore.Application.Products.Queries;
+using WidgetStore.Application.Queries;
 using WidgetStore.Infrastructure;
 using WidgetStore.Infrastructure.Sql;
 

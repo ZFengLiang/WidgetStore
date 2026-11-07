@@ -1,9 +1,10 @@
 ﻿using WidgetStore.Domain.Orders;
 namespace WidgetStore.Application.Interfaces;
 
-public interface IOrderRepository
+// WRITE side: used only by commands
+public interface IOrderWriteRepository
 {
-    Task AddAsync(Order order, CancellationToken ct);
     Task<Order?> GetAsync(string customerId, string orderId, CancellationToken ct);
+    Task AddAsync(Order order, CancellationToken ct);
     Task UpdateAsync(Order order, CancellationToken ct);
 }

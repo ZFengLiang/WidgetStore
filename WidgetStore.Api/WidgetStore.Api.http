@@ -19,7 +19,7 @@ Content-Type: application/json
 }
 
 ### Get the order (paste the orderId from the response above)
-GET {{baseUrl}}/api/customers/cust-7/orders/11f4610281e341d0820a757df82b9334
+GET {{baseUrl}}/api/customers/cust-7/orders/fd3277c708894a26a38c8a8f1475c739
 
 ### Broken rule: should give 400
 POST {{baseUrl}}/api/orders

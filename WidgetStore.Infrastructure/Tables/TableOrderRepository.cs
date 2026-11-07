@@ -6,7 +6,7 @@ using WidgetStore.Domain.Orders;
 
 namespace WidgetStore.Infrastructure.Tables;
 
-public class TableOrderRepository : IOrderRepository
+public class TableOrderRepository : IOrderReadRepository, IOrderWriteRepository
 {
     private readonly TableClient _table;
 

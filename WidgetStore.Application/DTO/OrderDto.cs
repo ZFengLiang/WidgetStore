@@ -1,7 +1,5 @@
 ﻿using WidgetStore.Domain.Orders;
-namespace WidgetStore.Application.Orders;
-
-public record OrderLineDto(int ProductId, int Quantity, decimal UnitPrice, decimal LineTotal);
+namespace WidgetStore.Application.DTO;
 
 public record OrderDto(string Id, string CustomerId, string Status, decimal Total,
     DateTime OrderDate, DateTime? ShippedAt, double? ProcessingHours, List<OrderLineDto> Lines)

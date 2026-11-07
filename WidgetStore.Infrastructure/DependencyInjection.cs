@@ -26,7 +26,9 @@ public static class DependencyInjection
         services.AddSingleton(new QueueServiceClient(storage,
             new QueueClientOptions { MessageEncoding = QueueMessageEncoding.Base64 }));
 
-        services.AddSingleton<IOrderRepository, TableOrderRepository>();
+        services.AddSingleton<TableOrderRepository>();
+        services.AddSingleton<IOrderReadRepository>(sp => sp.GetRequiredService<TableOrderRepository>());
+        services.AddSingleton<IOrderWriteRepository>(sp => sp.GetRequiredService<TableOrderRepository>());
         services.AddSingleton<IMessagePublisher, StorageQueuePublisher>();
         return services;
     }

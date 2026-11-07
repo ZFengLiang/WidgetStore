@@ -1,20 +1,17 @@
 ﻿using MediatR;
 using WidgetStore.Application.Interfaces;
+using WidgetStore.Application.Messages;
 using WidgetStore.Domain.Common;
 using WidgetStore.Domain.Orders;
 
-namespace WidgetStore.Application.Orders.Commands;
+namespace WidgetStore.Application.Commands.Handlers;
 
-// COMMAND = a request to CHANGE something. Returns the new order id.
-public record PlaceOrderCommand(string CustomerId, List<PlaceOrderLine> Lines) : IRequest<string>;
-public record PlaceOrderLine(int ProductId, int Quantity);
-
-public class PlaceOrderHandler(IProductRepository products, IOrderRepository orders, IMessagePublisher publisher)
+public class PlaceOrderCommandHandler(IProductRepository products, IOrderWriteRepository orders, IMessagePublisher publisher)
     : IRequestHandler<PlaceOrderCommand, string>
 {
     public async Task<string> Handle(PlaceOrderCommand cmd, CancellationToken ct)
     {
-        // Look up the current price of each product (price comes from OUR database, never from the customer)
+        // Prices come from OUR database, never from the customer
         var lines = new List<OrderLine>();
         foreach (var line in cmd.Lines)
         {
@@ -23,8 +20,7 @@ public class PlaceOrderHandler(IProductRepository products, IOrderRepository ord
             lines.Add(new OrderLine(product.Id, line.Quantity, product.Price));
         }
 
-        // Business rules are checked inside Order.Place (Domain)
-        var order = Order.Place(cmd.CustomerId, lines, DateTime.UtcNow);
+        var order = Order.Place(cmd.CustomerId, lines, DateTime.UtcNow);   // rules checked in Domain
 
         await orders.AddAsync(order, ct);                                   // 1. save as Pending
         await publisher.PublishAsync(QueueNames.OrderPlaced,                // 2. ticket for Function 1
