@@ -9,7 +9,7 @@ namespace WidgetStore.Api.Controllers;
 
 [ApiController]
 [Route("api/products")]
-public class ProductController(IMediator mediator) : ControllerBase
+public class ProductsController(IMediator mediator) : ControllerBase
 {
     // Thin controller: turns HTTP into a query, nothing more.
     [HttpGet]
