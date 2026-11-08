@@ -156,7 +156,19 @@ Run them with `dotnet test`. There are 12 tests, and none of them need Docker, a
 
 ## Running it
 
-1. Start Docker, then `docker start azurite sqlserver`.
-2. Set the SQL connection string for the API with `dotnet user-secrets`, and create `WidgetStore.Functions/local.settings.json` with `AzureWebJobsStorage`, `ConnectionStrings__Sql` and `ConnectionStrings__Storage`. Both are kept out of Git.
-3. Run `WidgetStore.Api`, then `WidgetStore.Functions`. The database and the four example products are created on the first start.
-4. Open `WidgetStore.Api/WidgetStore.Api.http` and run the requests from top to bottom.
+**You need:** the .NET 10 SDK, Docker Desktop, and Azure Functions Core Tools v4 (check with `func --version`).
+
+1. Start SQL Server and Azurite in Docker. Pick any strong password and use the same one in steps 2 and 3.
+   ```powershell
+   docker run -d --name sqlserver -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=<your password>" -p 1433:1433 mcr.microsoft.com/mssql/server:2022-latest
+   docker run -d --name azurite -p 10000:10000 -p 10001:10001 -p 10002:10002 mcr.microsoft.com/azure-storage/azurite
+   ```
+2. Give the API its SQL connection string (run this in the solution folder):
+   ```powershell
+   dotnet user-secrets set "ConnectionStrings:Sql" "Server=localhost,1433;Database=WidgetStore;User Id=sa;Password=<your password>;TrustServerCertificate=True;" --project WidgetStore.Api
+   ```
+3. Copy `WidgetStore.Functions/local.settings.example.json` to `WidgetStore.Functions/local.settings.json` and put the same password in it.
+4. Run the unit tests (no Docker needed): `dotnet test`
+5. Start the API: `dotnet run --project WidgetStore.Api --launch-profile http`. It runs on http://localhost:5087, and creates the database and the four example products on the first start.
+6. In a second terminal, start the Functions: `cd WidgetStore.Functions`, then `func start`.
+7. Open `WidgetStore.Api/WidgetStore.Api.http` and run the requests from top to bottom. After placing an order, paste its `orderId` into the variable at the top of the file.
