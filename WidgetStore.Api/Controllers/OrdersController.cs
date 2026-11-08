@@ -25,4 +25,12 @@ public class OrdersController(IMediator mediator) : ControllerBase
         var order = await mediator.Send(new GetOrderQuery(customerId, orderId), ct);
         return order is null ? NotFound() : Ok(order);
     }
+    
+    // PUT /api/customers/{customerId}/orders/{orderId}/ship → the warehouse marks it shipped
+    [HttpPut("customers/{customerId}/orders/{orderId}/ship")]
+    public async Task<ActionResult<OrderDto>> Ship(string customerId, string orderId, CancellationToken ct)
+    {
+        var order = await mediator.Send(new ShipOrderCommand(customerId, orderId), ct);
+        return order is null ? NotFound() : Ok(order);
+    }
 }

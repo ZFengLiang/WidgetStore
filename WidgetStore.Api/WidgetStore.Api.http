@@ -35,3 +35,57 @@ Content-Type: application/json
   "customerId": "cust-8",
   "lines": [ { "productId": 3, "quantity": 5 } ]
 }
+
+### Ship an order (warehouse)
+PUT {{baseUrl}}/api/customers/cust-7/orders/fd3277c708894a26a38c8a8f1475c739/ship
+
+### Shipping a Rejected order: should give 400
+PUT {{baseUrl}}/api/customers/cust-8/orders/f220bc08355e4f7da1bdf4546304af35/ship
+
+### Order processing metric for this month
+GET {{baseUrl}}/api/metrics/order-processing?month=2026-11
+
+
+### Upload image: Widget Basic (id 1)
+POST {{baseUrl}}/api/products/1/image
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="widget-basic.png"
+Content-Type: image/png
+
+< ../TestData/Images/widget-basic.png
+--WebAppBoundary--
+
+### Upload image: Widget Pro (id 2)
+POST {{baseUrl}}/api/products/2/image
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="widget-pro.png"
+Content-Type: image/png
+
+< ../TestData/Images/widget-pro.png
+--WebAppBoundary--
+
+### Upload image: Widget Mini (id 3)
+POST {{baseUrl}}/api/products/3/image
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="widget-mini.png"
+Content-Type: image/png
+
+< ../TestData/Images/widget-mini.png
+--WebAppBoundary--
+
+### Upload image: Widget Stand (id 4)
+POST {{baseUrl}}/api/products/4/image
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="widget-stand.png"
+Content-Type: image/png
+
+< ../TestData/Images/widget-stand.png
+--WebAppBoundary--

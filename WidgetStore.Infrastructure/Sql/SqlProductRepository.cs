@@ -4,7 +4,7 @@ using WidgetStore.Domain.Products;
 
 namespace WidgetStore.Infrastructure.Sql;
 
-public class SqlProductRepository(WidgetStoreDbContext db) : IProductRepository
+public class SqlProductRepository(WidgetStoreDbContext db) : IProductRepository, IProductWriteRepository
 {
     public Task<List<Product>> GetAllAsync(string? category, CancellationToken ct)
     {
@@ -15,5 +15,8 @@ public class SqlProductRepository(WidgetStoreDbContext db) : IProductRepository
     }
     public Task<Product?> GetByIdAsync(int id, CancellationToken ct) =>
         db.Products.AsNoTracking().FirstOrDefaultAsync(p => p.Id == id, ct);
+    public Task SetImageUrlAsync(int productId, string imageUrl, CancellationToken ct) =>
+        db.Products.Where(p => p.Id == productId)
+            .ExecuteUpdateAsync(s => s.SetProperty(p => p.ImageUrl, imageUrl), ct);
     
 }
