@@ -154,6 +154,28 @@ Run them with `dotnet test`. There are 12 tests, and none of them need Docker, a
 | `ReserveStockCommandHandlerTests` | Not enough stock means the order is Rejected. The same message arriving twice doesn't reserve stock a second time. |
 | `GetOrderMetricsQueryHandlerTests` | The average is total hours divided by orders shipped. A month with no shipped orders has no average. |
 
+## Does this solve the peak-hour problem?
+
+Mostly, yes. The assignment says placing orders is what made the site slow at busy times. In a typical setup, the customer waits while everything happens: checking stock, updating it and saving the order. At peak time those requests pile up and wait on each other.
+
+In this design the customer doesn't wait for any of that:
+
+- Placing an order only saves one row and puts one message on a queue, then returns `202 Accepted`. That takes milliseconds, no matter how busy it is.
+- The slow part, reserving stock, happens afterwards in the ProcessOrder function. A rush of orders makes the queue longer instead of making the website slower.
+- In Azure, the functions scale out when the queue grows. Locally I saw three orders being processed at the same time, and the stock still came out right.
+- Orders are spread over many partitions because the partition key is the customer id, so there's no single hot partition taking all the writes.
+- Images come straight from Blob Storage and the metric comes from a small read model, so neither adds load to the order flow.
+
+There are some limits I'm aware of:
+
+- **I didn't load-test it.** I tested that it works correctly, not how many orders per minute it can handle. That would need a proper load test on Azure.
+- **The bottleneck moves to SQL.** Every order still updates stock in SQL. If thousands of people buy the same popular product, they all update the same row. To handle that I would limit how many functions run at once, or scale up the database.
+- **Prices are still read from SQL when an order is placed.** That's a quick read, but at very high traffic a cache would take that load away.
+- **The customer first sees "Pending".** The order is confirmed a moment later. 
+- **The real scaling only happens in Azure.** Locally everything runs on one machine, so the automatic scale-out isn't something I could show here.
+
+So the design fixes the cause the assignment points to: placing an order is now fast and the heavy work happens in the background. It's a proof of concept, though, so the numbers would still need to be proven in Azure.
+
 ## Running it
 
 **You need:** the .NET 10 SDK, Docker Desktop, and Azure Functions Core Tools v4 (check with `func --version`).
